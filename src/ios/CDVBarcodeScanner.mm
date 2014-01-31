@@ -637,9 +637,23 @@ parentViewController:(UIViewController*)parentViewController
     previewLayer.frame = self.view.bounds;
     previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
     
-    if ([previewLayer isOrientationSupported]) {
-        [previewLayer setOrientation:AVCaptureVideoOrientationPortrait];
+    UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+    if ( deviceOrientation == UIDeviceOrientationLandscapeLeft ){
+        if ([previewLayer isOrientationSupported]) {
+            [previewLayer setOrientation:AVCaptureVideoOrientationLandscapeRight];
+        }
+    
+    }else if ( deviceOrientation == UIDeviceOrientationLandscapeRight ){
+        if ([previewLayer isOrientationSupported]) {
+            [previewLayer setOrientation:AVCaptureVideoOrientationLandscapeLeft];
+        }
+    }else{
+        if ([previewLayer isOrientationSupported]) {
+            [previewLayer setOrientation:AVCaptureVideoOrientationPortrait];
+        }
     }
+
+    
     
     [self.view.layer insertSublayer:previewLayer below:[[self.view.layer sublayers] objectAtIndex:0]];
     
@@ -826,12 +840,26 @@ parentViewController:(UIViewController*)parentViewController
 
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
 {
-    return UIInterfaceOrientationPortrait;
+    UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+    if ( deviceOrientation == UIDeviceOrientationLandscapeRight ){
+        return UIInterfaceOrientationLandscapeLeft;
+    }else if (deviceOrientation == UIDeviceOrientationLandscapeLeft){
+        return UIInterfaceOrientationLandscapeRight;
+    }else{
+        return UIInterfaceOrientationPortrait;
+    }
 }
 
 - (NSUInteger)supportedInterfaceOrientations
 {
-    return UIInterfaceOrientationMaskPortrait;
+    UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+    if ( deviceOrientation == UIDeviceOrientationLandscapeRight ){
+        return UIInterfaceOrientationMaskLandscapeLeft;
+    }else if (deviceOrientation == UIDeviceOrientationLandscapeLeft){
+        return UIInterfaceOrientationMaskLandscapeRight;
+    }else{
+        return UIInterfaceOrientationMaskPortrait;
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
